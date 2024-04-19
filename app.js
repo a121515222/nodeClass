@@ -1,5 +1,5 @@
-const express = require("express");
 require("dotenv").config({ path: ".env" });
+const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
@@ -19,6 +19,15 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/posts", postsRouter);
+// 找不到routes時，回傳404
+app.use(function (req, res, next) {
+  res.status(404).send("Sorry cant find that!");
+});
+// 錯誤處理
+app.use(function (err, req, res, next) {
+  console.error(err.stack);
+  res.status(500).send("Something wrong!");
+});
 const port = 3000;
 app.listen(port);
 module.exports = app;

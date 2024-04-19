@@ -56,7 +56,27 @@
 			"response": []
 		},
 		{
-			"name": "PUT/posts",
+			"name": "GET/posts/:id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://nodeclass-8cvx.onrender.com/posts",
+					"protocol": "https",
+					"host": [
+						"nodeclass-8cvx",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT/posts/:id",
 			"request": {
 				"method": "PUT",
 				"header": [],
@@ -86,7 +106,7 @@
 			"response": []
 		},
 		{
-			"name": "DELETE/posts",
+			"name": "DELETE/posts/:id",
 			"request": {
 				"method": "DELETE",
 				"header": [],
