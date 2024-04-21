@@ -14,9 +14,10 @@ const postSchema = new mongoose.Schema(
       default: Date.now,
       select: false,
     },
-    name: {
-      type: String,
-      required: [true, "貼文姓名未填寫"],
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: [true, "userId未填寫"],
+      ref: "user",
     },
     likes: {
       type: Number,
@@ -25,5 +26,5 @@ const postSchema = new mongoose.Schema(
   },
   { versionKey: false }
 );
-const Post = mongoose.model("Post", postSchema);
+const Post = mongoose.model("post", postSchema);
 module.exports = Post;
