@@ -37,6 +37,6 @@ app.use(function (err, req, res, next) {
   res.status(500).send(err.stack);
 });
 
-const port = process.env.PORT || 3000;
+const port = 3000;
 app.listen(port);
 module.exports = app;
