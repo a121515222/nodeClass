@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
-// require("dotenv").config({ path: ".env" });
-=======
-require("dotenv").config({ path: ".env.local" });
->>>>>>> 40db0821f9e60c46140c54a3b310872caabf5176
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
