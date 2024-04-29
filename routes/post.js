@@ -52,32 +52,13 @@ router.put(
   })
 );
 
-router.delete("/:id", async function (req, res) {
-  console.log("req.originalUrl", req.originalUrl);
-  if (!req.params.id) {
-  } else if (req.originalUrl === "/posts/") {
-    customizeAppError(400, "缺少id");
-  } else {
-    try {
-      const post = await Post.findByIdAndDelete(req.params.id);
-      if (post === null) {
-        res.status(404).send("找不到資料");
-      } else {
-        res.send(`已成功刪除資料`);
-      }
-    } catch (error) {
-      returnErrorMessage(error, res);
-    }
-  }
-});
-
 router.delete(
   "/:id",
   handleErrorAsync(async (res, req, next) => {
     if (!req.params.id) {
-      return res.status(400).send("請輸入id");
+      customizeAppError(400, "缺少id");
     } else if (req.originalUrl === "/posts/") {
-      return res.status(400).send("請輸入id");
+      customizeAppError(400, "缺少id");
     } else {
       const post = await Post.findByIdAndDelete(req.params.id);
       if (post === null) {
@@ -85,6 +66,16 @@ router.delete(
       } else {
         res.send(`已成功刪除資料`);
       }
+    }
+  })
+);
+
+router.delete(
+  "/",
+  handleErrorAsync(async (res, req, next) => {
+    console.log("delete originalUrl", res.originalUrl);
+    if (res.originalUrl === "/posts/") {
+      customizeAppError(400, "缺少id");
     }
   })
 );
