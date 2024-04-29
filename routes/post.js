@@ -1,11 +1,22 @@
 const express = require("express");
 const router = express.Router();
-const Post = require("../models/posts");
+const Post = require("../models/postModel");
+// const User = require("../models/userModel");
 const returnErrorMessage = require("../error/errorMessage");
 
 router.get("/", async function (req, res) {
-  const posts = await Post.find().limit(30);
-  res.send(posts);
+  const timeSort = req.query.timeSort == "asc" ? "createdAt" : "-createdAt";
+  const q =
+    req.query.q !== undefined ? { content: new RegExp(req.query.q) } : {};
+  const post = await Post.find(q)
+    .populate({
+      path: "user",
+      select: "name photo ",
+    })
+    .sort(timeSort)
+    .select("content image user likes createdAt");
+
+  res.send(post);
 });
 router.get("/:id", async function (req, res) {
   const post = await Post.findById(req.params.id);

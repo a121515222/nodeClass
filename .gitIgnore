@@ -1,4 +1,8 @@
 node_modules
 .env
+<<<<<<< HEAD
 .env.local
 .env.dev
+=======
+.env.local
+>>>>>>> 40db0821f9e60c46140c54a3b310872caabf5176
