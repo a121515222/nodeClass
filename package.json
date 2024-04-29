@@ -5,7 +5,8 @@
   "scripts": {
     "start": "nodemon ./bin/www",
     "dev": "cross-env NODE_ENV=dev nodemon ./bin/www",
-    "local": "cross-env NODE_ENV=local nodemon ./bin/www"
+    "local": "cross-env NODE_ENV=local nodemon ./bin/www",
+    "pro": "cross-env NODE_ENV=production nodemon ./bin/www"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
