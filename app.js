@@ -1,4 +1,5 @@
-require("dotenv").config({ path: ".env" });
+require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
+// require("dotenv").config({ path: ".env" });
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
@@ -8,6 +9,7 @@ const postsRouter = require("./routes/posts");
 
 const app = express();
 const uri = process.env.URI;
+
 mongoose.connect(uri).then(() => {
   console.log("連線成功");
 });
@@ -21,7 +23,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/posts", postsRouter);
 // 找不到routes時，回傳404
 app.use(function (req, res, next) {
-  res.status(404).send("Sorry cant find that!");
+  res.status(404).send("Sorry cant find that url!");
 });
 // 錯誤處理
 app.use(function (err, req, res, next) {

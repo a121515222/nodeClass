@@ -14,7 +14,6 @@ router.get("/:id", async function (req, res) {
 router.post("/", async function (req, res) {
   try {
     const post = await Post.create(req.body);
-    console.log("post", post);
     res.send(post);
   } catch (error) {
     returnErrorMessage(error, res);
@@ -36,7 +35,10 @@ router.put("/:id", async function (req, res) {
   }
 });
 router.delete("/:id", async function (req, res) {
+  console.log("req.originalUrl", req.originalUrl);
   if (!req.params.id) {
+    return res.status(400).send("請輸入id");
+  } else if (req.originalUrl === "/posts/") {
     return res.status(400).send("請輸入id");
   } else {
     try {
