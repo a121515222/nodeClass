@@ -44,6 +44,7 @@ app.use(function (req, res, next) {
 // 錯誤處理
 app.use(function (err, req, res, next) {
   if (process.env.NODE_ENV === "dev") {
+    console.log("err", err);
     res.status(500).json({
       status: false,
       message: err,

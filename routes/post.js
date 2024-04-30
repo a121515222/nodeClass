@@ -41,7 +41,7 @@ router.put(
   "/:id",
   handleErrorAsync(async (res, req, next) => {
     if (!req.params.id) {
-      customizeAppError(400, "缺少id");
+      next(customizeAppError(400, "缺少id"));
     } else {
       const post = await Post.findByIdAndUpdate(req.params.id, req.body, {
         runValidators: true,
@@ -56,9 +56,9 @@ router.delete(
   "/:id",
   handleErrorAsync(async (res, req, next) => {
     if (!req.params.id) {
-      customizeAppError(400, "缺少id");
+      return next(customizeAppError(400, "缺少id"));
     } else if (req.originalUrl === "/posts/") {
-      customizeAppError(400, "缺少id");
+      return next(customizeAppError(400, "缺少id"));
     } else {
       const post = await Post.findByIdAndDelete(req.params.id);
       if (post === null) {
@@ -75,7 +75,7 @@ router.delete(
   handleErrorAsync(async (res, req, next) => {
     console.log("delete originalUrl", res.originalUrl);
     if (res.originalUrl === "/posts/") {
-      customizeAppError(400, "缺少id");
+      return next(customizeAppError(400, "缺少id"));
     }
   })
 );
