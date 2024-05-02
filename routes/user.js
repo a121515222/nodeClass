@@ -1,15 +1,22 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/userModel");
-const returnErrorMessage = require("../error/errorMessage");
+const handleErrorAsync = require("../error/handleErrorAsync");
 
-router.post("/", async function (req, res) {
-  try {
+router.post(
+  "/",
+  handleErrorAsync(async (req, res, next) => {
     const user = await User.create(req.body);
     res.send(user);
-  } catch (error) {
-    returnErrorMessage(error, res);
-  }
-});
+  })
+);
+
+router.get(
+  "/",
+  handleErrorAsync(async (req, res, next) => {
+    const users = await User.find();
+    res.send(users);
+  })
+);
 
 module.exports = router;

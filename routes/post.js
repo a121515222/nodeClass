@@ -25,7 +25,11 @@ router.get(
   "/:id",
   handleErrorAsync(async (req, res, next) => {
     const post = await Post.findById(req.params.id);
-    res.send(post);
+    if (post === null) {
+      next(customizeAppError(404, "找不到資料"));
+    } else {
+      res.send(post);
+    }
   })
 );
 
@@ -39,7 +43,7 @@ router.post(
 
 router.put(
   "/:id",
-  handleErrorAsync(async (res, req, next) => {
+  handleErrorAsync(async (req, res, next) => {
     if (!req.params.id) {
       next(customizeAppError(400, "缺少id"));
     } else {
@@ -54,7 +58,7 @@ router.put(
 
 router.delete(
   "/:id",
-  handleErrorAsync(async (res, req, next) => {
+  handleErrorAsync(async (req, res, next) => {
     if (!req.params.id) {
       return next(customizeAppError(400, "缺少id"));
     } else if (req.originalUrl === "/posts/") {
@@ -72,7 +76,7 @@ router.delete(
 
 router.delete(
   "/",
-  handleErrorAsync(async (res, req, next) => {
+  handleErrorAsync(async (req, res, next) => {
     console.log("delete originalUrl", res.originalUrl);
     if (res.originalUrl === "/posts/") {
       return next(customizeAppError(400, "缺少id"));

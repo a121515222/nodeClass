@@ -1,4 +1,4 @@
-const handleError = (err) => {
+const handleProductionError = (err) => {
   //mongoose錯誤
   if (err.name === "ValidationError") {
     return err.message;
@@ -9,5 +9,21 @@ const handleError = (err) => {
     return err;
   }
 };
-
-module.exports = handleError;
+const handleDevError = (err, res) => {
+  if (err.name === "ValidationError") {
+    res.status(err.statusCode || 500).json({
+      status: false,
+      message: {
+        errors: err.message,
+        name: err.name,
+        stack: err.stack,
+      },
+    });
+  } else {
+    res.status(err.statusCode || 500).json({
+      status: false,
+      message: err,
+    });
+  }
+};
+module.exports = { handleProductionError, handleDevError };

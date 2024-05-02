@@ -6,7 +6,11 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 const postsRouter = require("./routes/post");
 const usersRouter = require("./routes/user");
-const handleError = require("./error/handleError");
+const {
+  handleProductionError,
+  handleDevError,
+} = require("./error/handleError");
+const { error } = require("console");
 const app = express();
 
 //記錄錯誤
@@ -41,16 +45,15 @@ app.use(function (req, res, next) {
     message: "找不到Url",
   });
 });
+
 // 錯誤處理
 app.use(function (err, req, res, next) {
   if (process.env.NODE_ENV === "dev") {
-    console.log("err", err);
-    res.status(500).json({
-      status: false,
-      message: err,
-    });
+    console.log("DEV err", err);
+    handleDevError(err, res);
   } else {
-    const message = handleError(err);
+    console.log("production err", err);
+    const message = handleProductionError(err);
     res.status(500).json({
       status: false,
       message,
