@@ -3,26 +3,26 @@ const postSchema = new mongoose.Schema(
   {
     content: {
       type: String,
-      required: [true, "Content需填寫"],
+      required: [true, "Content需填寫"]
     },
     image: {
       type: String,
-      default: "",
+      default: ""
     },
     createdAt: {
       type: Date,
       default: Date.now,
-      select: false,
+      select: false
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      required: [true, "userId未填寫"],
-      ref: "user",
+      required: [true, "userId需填寫"],
+      ref: "user"
     },
     likes: {
       type: Number,
-      default: 0,
-    },
+      default: 0
+    }
   },
   { versionKey: false }
 );

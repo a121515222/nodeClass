@@ -2,9 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Post = require("../models/postModel");
 // const User = require("../models/userModel");
-const returnErrorMessage = require("../error/errorMessage");
 const handleErrorAsync = require("../error/handleErrorAsync");
-const customizeAppError = require("../error/customizeAppError");
+const { customizeAppError } = require("../error/handleError");
 router.get(
   "/",
   handleErrorAsync(async (req, res, next) => {
@@ -14,7 +13,7 @@ router.get(
     const post = await Post.find(q)
       .populate({
         path: "user",
-        select: "name photo ",
+        select: "name photo "
       })
       .sort(timeSort)
       .select("content image user likes createdAt");
@@ -49,7 +48,7 @@ router.put(
     } else {
       const post = await Post.findByIdAndUpdate(req.params.id, req.body, {
         runValidators: true,
-        new: true,
+        new: true
       });
       res.send(post);
     }
@@ -77,8 +76,7 @@ router.delete(
 router.delete(
   "/",
   handleErrorAsync(async (req, res, next) => {
-    console.log("delete originalUrl", res.originalUrl);
-    if (res.originalUrl === "/posts/") {
+    if (req.originalUrl === "/posts/") {
       return next(customizeAppError(400, "缺少id"));
     }
   })

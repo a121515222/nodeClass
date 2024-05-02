@@ -1,0 +1,208 @@
+{
+	"info": {
+		"_postman_id": "ffb3d2fe-f0c4-417e-a60d-fb3766a1b8cf",
+		"name": "posts",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20974968"
+	},
+	"item": [
+		{
+			"name": "POST/posts",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"content\":\"我是contenttest888888888\"\r\n    // \"user\":\"6624e596c1fc7f2565fcbbb2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://nodeclass-8cvx.onrender.com/post",
+					"protocol": "https",
+					"host": [
+						"nodeclass-8cvx",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET/posts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/posts?timeSort=asc&timeSort=dasc",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"posts"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "888",
+							"description": "content關鍵字",
+							"disabled": true
+						},
+						{
+							"key": "timeSort",
+							"value": "asc",
+							"description": "由舊到新"
+						},
+						{
+							"key": "timeSort",
+							"value": "dasc",
+							"description": "由新到舊"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET/posts/:id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://nodeclass-8cvx.onrender.com/posts/662508abcaea355b278a2697",
+					"protocol": "https",
+					"host": [
+						"nodeclass-8cvx",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"posts",
+						"662508abcaea355b278a2697"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT/posts/:id",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"content\":\"new9999\",\r\n    \"name\":\"new99\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://nodeclass-8cvx.onrender.com/posts/",
+					"protocol": "https",
+					"host": [
+						"nodeclass-8cvx",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"posts",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE/posts/:id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://nodeclass-8cvx.onrender.com/posts/",
+					"protocol": "https",
+					"host": [
+						"nodeclass-8cvx",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"posts",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST/users",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"a12315@hotamil.com\",\r\n    \"name\":\"Jack123\",\r\n    \"photo\":\"https://i.imgur.com/gCFCpya.jpeg\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://nodeclass-8cvx.onrender.com/users",
+					"protocol": "https",
+					"host": [
+						"nodeclass-8cvx",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET/users",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"a12315@hotamil.com\",\r\n    \"name\":\"Jack123\",\r\n    \"photo\":\"https://i.imgur.com/gCFCpya.jpeg\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://nodeclass-8cvx.onrender.com/users",
+					"protocol": "https",
+					"host": [
+						"nodeclass-8cvx",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

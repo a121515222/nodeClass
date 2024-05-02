@@ -8,7 +8,7 @@ const postsRouter = require("./routes/post");
 const usersRouter = require("./routes/user");
 const {
   handleProductionError,
-  handleDevError,
+  handleDevError
 } = require("./error/handleError");
 const { error } = require("console");
 const app = express();
@@ -42,7 +42,7 @@ app.use("/users", usersRouter);
 app.use(function (req, res, next) {
   res.status(404).json({
     status: false,
-    message: "找不到Url",
+    message: "找不到Url"
   });
 });
 
@@ -53,11 +53,7 @@ app.use(function (err, req, res, next) {
     handleDevError(err, res);
   } else {
     console.log("production err", err);
-    const message = handleProductionError(err);
-    res.status(500).json({
-      status: false,
-      message,
-    });
+    handleProductionError(err, res);
   }
 });
 
