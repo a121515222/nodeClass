@@ -42,3 +42,5 @@ const customizeAppError = (httpStatus, errMessage) => {
   error.errorMessage = errMessage;
   return error;
 };
+
+module.exports = { handleProductionError, handleDevError,customizeAppError }
