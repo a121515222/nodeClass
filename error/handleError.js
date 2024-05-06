@@ -11,6 +11,16 @@ const handleProductionError = (err, res) => {
         err.kind === "ObjectId" ? "找不到資料" : "資料庫忙碌中，請稍後再試";
       statusCode = err.kind === "ObjectId" ? 404 : statusCode;
       break;
+
+    case "MongoServerError":
+      if (err.code === 11000) {
+        keyPattern = Object.keys(err.keyPattern);
+        message = `已存在${keyPattern[0]}，請更換其他email註冊`;
+        statusCode = 406;
+      } else {
+        message = "資料庫出錯，請稍後再試";
+      }
+      break;
     case "ReferenceError":
       message = "Server忙碌中，請稍後再試";
       break;
@@ -29,7 +39,7 @@ const handleDevError = (err, res) => {
   const message = {
     errors: err.message,
     name: err.name,
-    stack: err.stack
+    stack: err.stack,
   };
 
   res.status(statusCode).json({ status: false, message });
@@ -43,4 +53,4 @@ const customizeAppError = (httpStatus, errMessage) => {
   return error;
 };
 
-module.exports = { handleProductionError, handleDevError,customizeAppError }
+module.exports = { handleProductionError, handleDevError, customizeAppError };
