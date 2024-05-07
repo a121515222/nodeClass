@@ -1,54 +1,61 @@
 const express = require("express");
 const router = express.Router();
-const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const handleErrorAsync = require("../error/handleErrorAsync");
 const { customizeAppError } = require("../error/handleError");
+const {
+  checkEmail,
+  checkPasswordSignUp,
+  checkPasswordSignIn,
+} = require("../utils/check");
+
+const genTokenByJWTAndSend = (user, res) => {
+  const { _id, nickName, email } = user;
+  const token = jwt.sign({ _id }, process.env.SECRETWORD);
+  res.send({
+    status: true,
+    user: {
+      token,
+      nickName: nickName ? nickName : "",
+      email,
+    },
+  });
+};
+
 router.post(
-  "/",
+  "/sign_up",
   handleErrorAsync(async (req, res, next) => {
     const { password, confirmPassword, email } = req.body;
-    console.log("req.body", req.body);
     //檢查email
-    if (!email) {
-      return next(customizeAppError(406, "請輸入email"));
-    }
-    if (!validator.isEmail(email)) {
-      return next(customizeAppError(406, "請按照email格式輸入"));
-    }
-    if (!password || !confirmPassword) {
-      return next(customizeAppError(406, "請輸入密碼與確認密碼"));
-    }
-    if (password !== confirmPassword) {
-      return next(customizeAppError(406, "密碼與確認密碼不相同"));
-    }
-    if (!validator.isLength(password, { min: 8 })) {
-      return next(customizeAppError(406, "請輸入八碼密碼"));
-    }
+    checkEmail(email);
+    //檢查password
+    checkPasswordSignUp(password, confirmPassword);
 
-    const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(password, salt);
-    req.body.password = hash;
+    // const salt = bcrypt.genSaltSync(10);
+    // const hash = bcrypt.hashSync(password, salt);
+
+    req.body.password = await bcrypt.hash(req.body.password, 12);
     const user = await User.create(req.body);
-    const { _id } = user;
-
-    const token = jwt.sign({ _id }, process.env.SECRETWORD);
-
-    res.send({
-      status: true,
-      token,
-    });
+    genTokenByJWTAndSend(user, res);
     next();
   })
 );
 
-router.get(
-  "/",
+router.post(
+  "/sign_in",
   handleErrorAsync(async (req, res, next) => {
-    const users = await User.find();
-    res.send(users);
+    const { email, password } = req.body;
+    checkPasswordSignIn(password);
+    checkEmail(email);
+    const loginUser = await User.findOne({ email }).select("+password");
+    const isAuth = await bcrypt.compare(password, loginUser.password);
+    if (!isAuth) {
+      next(customizeAppError(406, "密碼不正確"));
+    } else {
+      genTokenByJWTAndSend(loginUser, res);
+    }
   })
 );
 

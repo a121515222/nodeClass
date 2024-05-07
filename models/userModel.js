@@ -6,11 +6,11 @@ const userSchema = new mongoose.Schema(
       required: [true, "缺少Email"],
       unique: true,
       lowercase: true,
-      select: false,
       unique: true, //唯一值，有相同的email註冊時會報錯
     },
     password: {
       type: String,
+      select: false,
       required: [true, "缺少password"],
     },
     nickName: {

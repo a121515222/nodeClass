@@ -37,7 +37,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/posts", postsRouter);
-app.use("/users/sign_up", usersRouter);
+app.use("/users", usersRouter);
 // 找不到routes時，回傳404
 app.use(function (req, res, next) {
   res.status(404).json({
