@@ -1,6 +1,6 @@
 const validator = require("validator");
 const { customizeAppError } = require("../error/handleError");
-const checkPasswordSignUp = (password, confirmPassword) => {
+const checkPasswordSignUp = (next, password, confirmPassword) => {
   if (!password || !confirmPassword) {
     return next(customizeAppError(406, "請輸入密碼與確認密碼"));
   }
@@ -12,7 +12,7 @@ const checkPasswordSignUp = (password, confirmPassword) => {
   }
 };
 
-const checkPasswordSignIn = (password) => {
+const checkPasswordSignIn = (next, password) => {
   if (!password) {
     return next(customizeAppError(406, "請輸入密碼與確認密碼"));
   }
@@ -21,7 +21,7 @@ const checkPasswordSignIn = (password) => {
   }
 };
 
-const checkEmail = (email) => {
+const checkEmail = (next, email) => {
   if (!email) {
     return next(customizeAppError(406, "請輸入email"));
   }

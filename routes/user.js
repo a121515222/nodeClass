@@ -8,19 +8,19 @@ const { customizeAppError } = require("../error/handleError");
 const {
   checkEmail,
   checkPasswordSignUp,
-  checkPasswordSignIn,
+  checkPasswordSignIn
 } = require("../utils/check");
-
+const { isAuth } = require("../utils/auth");
 const genTokenByJWTAndSend = (user, res) => {
   const { _id, nickName, email } = user;
-  const token = jwt.sign({ _id }, process.env.SECRETWORD);
+  const token = jwt.sign({ _id }, process.env.SECRETWORD, { expiresIn: "7d" });
   res.send({
     status: true,
     user: {
       token,
       nickName: nickName ? nickName : "",
-      email,
-    },
+      email
+    }
   });
 };
 
@@ -29,14 +29,11 @@ router.post(
   handleErrorAsync(async (req, res, next) => {
     const { password, confirmPassword, email } = req.body;
     //檢查email
-    checkEmail(email);
+    checkEmail(next, email);
     //檢查password
     checkPasswordSignUp(password, confirmPassword);
 
-    // const salt = bcrypt.genSaltSync(10);
-    // const hash = bcrypt.hashSync(password, salt);
-
-    req.body.password = await bcrypt.hash(req.body.password, 12);
+    req.body.password = await bcrypt.hash(req.body.password, 10);
     const user = await User.create(req.body);
     genTokenByJWTAndSend(user, res);
     next();
@@ -47,14 +44,40 @@ router.post(
   "/sign_in",
   handleErrorAsync(async (req, res, next) => {
     const { email, password } = req.body;
-    checkPasswordSignIn(password);
-    checkEmail(email);
+    checkPasswordSignIn(next, password);
+    checkEmail(next, email);
     const loginUser = await User.findOne({ email }).select("+password");
-    const isAuth = await bcrypt.compare(password, loginUser.password);
-    if (!isAuth) {
+    const isPass = await bcrypt.compare(password, loginUser.password);
+    if (!isPass) {
       next(customizeAppError(406, "密碼不正確"));
     } else {
       genTokenByJWTAndSend(loginUser, res);
+    }
+  })
+);
+
+router.put(
+  "/updatePassword",
+  isAuth,
+  handleErrorAsync(async (req, res, next) => {
+    const { confirmPassword, newPassword } = req.body;
+    checkPasswordSignUp(next, newPassword, confirmPassword);
+    const hashPassword = await bcrypt.hash(newPassword, 10);
+    const { _id } = req.user;
+    const updatePassword = await User.findByIdAndUpdate(
+      _id,
+      {
+        password: hashPassword
+      },
+      { new: true }
+    ).select("+password");
+    if (updatePassword.password === hashPassword) {
+      res.status(200).json({
+        status: true,
+        message: "密碼修改成功"
+      });
+    } else {
+      next(customizeAppError(400, "修改密碼失敗"));
     }
   })
 );

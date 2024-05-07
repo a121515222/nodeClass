@@ -8,7 +8,7 @@ const postsRouter = require("./routes/post");
 const usersRouter = require("./routes/user");
 const {
   handleProductionError,
-  handleDevError,
+  handleDevError
 } = require("./error/handleError");
 const { error } = require("console");
 const app = express();
@@ -18,11 +18,6 @@ process.on("uncaughtException", (err) => {
   console.log("uncaughtException");
   console.log(err);
   process.exit(1);
-});
-
-app.use(function (req, res, next) {
-  console.log("連線者驗證成功");
-  next();
 });
 const uri = process.env.URI;
 
@@ -42,7 +37,7 @@ app.use("/users", usersRouter);
 app.use(function (req, res, next) {
   res.status(404).json({
     status: false,
-    message: "找不到Url",
+    message: "找不到Url"
   });
 });
 
@@ -56,7 +51,6 @@ app.use(function (err, req, res, next) {
     handleProductionError(err, res);
   }
 });
-
 process.on("unhandledRejection", (reason, promise) => {
   console.error("未捕捉到的rejection:", promise, "原因:", reason);
 });

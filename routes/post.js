@@ -7,7 +7,6 @@ const { customizeAppError } = require("../error/handleError");
 router.get(
   "/",
   handleErrorAsync(async (req, res, next) => {
-    kk()
     const timeSort = req.query.timeSort == "asc" ? "createdAt" : "-createdAt";
     const q =
       req.query.q !== undefined ? { content: new RegExp(req.query.q) } : {};
