@@ -8,7 +8,7 @@ const { customizeAppError } = require("../error/handleError");
 const {
   checkEmail,
   checkPasswordSignUp,
-  checkPasswordSignIn
+  checkPasswordSignIn,
 } = require("../utils/check");
 const { isAuth } = require("../utils/auth");
 const genTokenByJWTAndSend = (user, res) => {
@@ -19,8 +19,8 @@ const genTokenByJWTAndSend = (user, res) => {
     user: {
       token,
       nickName: nickName ? nickName : "",
-      email
-    }
+      email,
+    },
   });
 };
 
@@ -47,6 +47,9 @@ router.post(
     checkPasswordSignIn(next, password);
     checkEmail(next, email);
     const loginUser = await User.findOne({ email }).select("+password");
+    if (!loginUser) {
+      next(customizeAppError(400, "找不到使用者"));
+    }
     const isPass = await bcrypt.compare(password, loginUser.password);
     if (!isPass) {
       next(customizeAppError(406, "密碼不正確"));
@@ -67,18 +70,50 @@ router.put(
     const updatePassword = await User.findByIdAndUpdate(
       _id,
       {
-        password: hashPassword
+        password: hashPassword,
       },
       { new: true }
     ).select("+password");
     if (updatePassword.password === hashPassword) {
       res.status(200).json({
         status: true,
-        message: "密碼修改成功"
+        message: "密碼修改成功",
       });
     } else {
       next(customizeAppError(400, "修改密碼失敗"));
     }
+  })
+);
+router.get(
+  "/profile",
+  isAuth,
+  handleErrorAsync(async (req, res, next) => {
+    const { _id } = req.user;
+    const userProfile = await User.findById(_id);
+    res.status(200).json({
+      status: true,
+      data: userProfile,
+    });
+  })
+);
+
+router.put(
+  "/profile",
+  isAuth,
+  handleErrorAsync(async (req, res, next) => {
+    const { _id } = req.user;
+    console.log("req", req.body);
+    const { email } = req.body;
+    if (email) {
+      checkEmail(next, email);
+    }
+    const userUpdateProfile = await User.findByIdAndUpdate(_id, req.body, {
+      new: true,
+    });
+    res.status(200).json({
+      status: true,
+      data: userUpdateProfile,
+    });
   })
 );
 

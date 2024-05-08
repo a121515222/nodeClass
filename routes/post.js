@@ -4,6 +4,7 @@ const Post = require("../models/postModel");
 // const User = require("../models/userModel");
 const handleErrorAsync = require("../error/handleErrorAsync");
 const { customizeAppError } = require("../error/handleError");
+const { isAuth } = require("../utils/auth");
 router.get(
   "/",
   handleErrorAsync(async (req, res, next) => {
@@ -13,7 +14,7 @@ router.get(
     const post = await Post.find(q)
       .populate({
         path: "user",
-        select: "name photo "
+        select: "name photo ",
       })
       .sort(timeSort)
       .select("content image user likes createdAt");
@@ -34,6 +35,7 @@ router.get(
 
 router.post(
   "/",
+  isAuth,
   handleErrorAsync(async (req, res, next) => {
     const post = await Post.create(req.body);
     res.send(post);
@@ -42,13 +44,14 @@ router.post(
 
 router.put(
   "/:id",
+  isAuth,
   handleErrorAsync(async (req, res, next) => {
     if (!req.params.id) {
       next(customizeAppError(400, "缺少id"));
     } else {
       const post = await Post.findByIdAndUpdate(req.params.id, req.body, {
         runValidators: true,
-        new: true
+        new: true,
       });
       res.send(post);
     }
@@ -57,6 +60,7 @@ router.put(
 
 router.delete(
   "/:id",
+  isAuth,
   handleErrorAsync(async (req, res, next) => {
     if (!req.params.id) {
       return next(customizeAppError(400, "缺少id"));
