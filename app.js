@@ -6,9 +6,10 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 const postsRouter = require("./routes/post");
 const usersRouter = require("./routes/user");
+const uploadRouter = require("./routes/upload");
 const {
   handleProductionError,
-  handleDevError
+  handleDevError,
 } = require("./error/handleError");
 const { error } = require("console");
 const app = express();
@@ -33,11 +34,12 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/posts", postsRouter);
 app.use("/users", usersRouter);
+app.use("", uploadRouter);
 // 找不到routes時，回傳404
 app.use(function (req, res, next) {
   res.status(404).json({
     status: false,
-    message: "找不到Url"
+    message: "找不到Url",
   });
 });
 

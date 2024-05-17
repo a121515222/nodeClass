@@ -1,6 +1,6 @@
 const validator = require("validator");
 const { customizeAppError } = require("../error/handleError");
-const checkPasswordSignUp = (next, password, confirmPassword) => {
+const checkPasswordSignUp = (password, confirmPassword, next) => {
   if (!password || !confirmPassword) {
     return next(customizeAppError(406, "請輸入密碼與確認密碼"));
   }

@@ -10,19 +10,8 @@ const {
   checkPasswordSignUp,
   checkPasswordSignIn,
 } = require("../utils/check");
+const { genTokenByJWTAndSend } = require("../utils/auth");
 const { isAuth } = require("../utils/auth");
-const genTokenByJWTAndSend = (user, res) => {
-  const { _id, nickName, email } = user;
-  const token = jwt.sign({ _id }, process.env.SECRETWORD, { expiresIn: "7d" });
-  res.send({
-    status: true,
-    user: {
-      token,
-      nickName: nickName ? nickName : "",
-      email,
-    },
-  });
-};
 
 router.post(
   "/sign_up",
@@ -31,7 +20,7 @@ router.post(
     //檢查email
     checkEmail(next, email);
     //檢查password
-    checkPasswordSignUp(password, confirmPassword);
+    checkPasswordSignUp(password, confirmPassword, next);
 
     req.body.password = await bcrypt.hash(req.body.password, 10);
     const user = await User.create(req.body);
@@ -64,7 +53,7 @@ router.put(
   isAuth,
   handleErrorAsync(async (req, res, next) => {
     const { confirmPassword, newPassword } = req.body;
-    checkPasswordSignUp(next, newPassword, confirmPassword);
+    checkPasswordSignUp(newPassword, confirmPassword, next);
     const hashPassword = await bcrypt.hash(newPassword, 10);
     const { _id } = req.user;
     const updatePassword = await User.findByIdAndUpdate(
